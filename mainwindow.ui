@@ -1,0 +1,943 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>920</width>
+    <height>820</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>700</width>
+    <height>600</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Universal Base64 Encoder / Decoder</string>
+  </property>
+  <property name="styleSheet">
+   <string>QMainWindow, QWidget#centralwidget { background: #f8fafc; }
+QWidget { color: #0f172a; font-size: 10pt; }
+QTabWidget::pane { border: 1px solid #e2e8f0; border-radius: 8px; background: #ffffff; top: -1px; }
+QTabBar::tab { background: #f1f5f9; color: #64748b; padding: 8px 22px; border: 1px solid #e2e8f0; border-bottom: none; border-top-left-radius: 6px; border-top-right-radius: 6px; margin-right: 2px; font-weight: 600; }
+QTabBar::tab:selected { background: #4f46e5; color: #ffffff; border-color: #4f46e5; }
+QWidget#tabEncode, QWidget#tabDecode { background: #ffffff; }
+QPushButton#dropZone { background: #f1f5f9; border: 2px dashed #cbd5e1; border-radius: 10px; color: #0f172a; font-weight: 600; padding: 12px; }
+QPushButton#dropZone:hover { background: #eef2ff; border-color: #4f46e5; }
+QFrame#encDetails, QFrame#decDetails { background: #f1f5f9; border-radius: 8px; }
+QLabel[role="caption"] { color: #64748b; font-size: 8pt; }
+QLabel[role="value"] { font-weight: 700; color: #0f172a; }
+QStackedWidget#encPreview, QStackedWidget#decPreview { background: #000000; border-radius: 8px; }
+QStackedWidget#encPreview QLabel, QStackedWidget#decPreview QLabel { color: #94a3b8; background: transparent; }
+QLabel#lblDecHint { color: #64748b; }
+QPlainTextEdit { background: #1e293b; color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-family: "DejaVu Sans Mono", monospace; font-size: 9pt; padding: 6px; }
+QPushButton { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 16px; font-weight: 600; }
+QPushButton:hover { background: #e2e8f0; }
+QPushButton:disabled { color: #94a3b8; }
+QPushButton[primary="true"] { background: #4f46e5; color: #ffffff; border: none; }
+QPushButton[primary="true"]:hover { background: #4338ca; }
+QPushButton[primary="true"]:disabled { background: #a5b4fc; color: #eef2ff; }
+QToolButton { background: #1e293b; color: #f8fafc; border: none; border-radius: 4px; padding: 4px 10px; }
+QLabel#lblDecError { background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; border-radius: 6px; padding: 8px 12px; }
+QComboBox, QLineEdit { border: 1px solid #e2e8f0; border-radius: 6px; padding: 5px 8px; background: #ffffff; }</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="centralLayout">
+    <property name="leftMargin">
+     <number>12</number>
+    </property>
+    <property name="topMargin">
+     <number>12</number>
+    </property>
+    <property name="rightMargin">
+     <number>12</number>
+    </property>
+    <property name="bottomMargin">
+     <number>12</number>
+    </property>
+    <item>
+     <widget class="QTabWidget" name="tabMain">
+      <widget class="QWidget" name="tabEncode">
+       <attribute name="title">
+        <string>Encode → Base64</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="encodeLayout" stretch="0,0,1,0,1,0">
+        <property name="spacing">
+         <number>10</number>
+        </property>
+        <property name="leftMargin">
+         <number>12</number>
+        </property>
+        <property name="topMargin">
+         <number>12</number>
+        </property>
+        <property name="rightMargin">
+         <number>12</number>
+        </property>
+        <property name="bottomMargin">
+         <number>12</number>
+        </property>
+        <item>
+         <widget class="QPushButton" name="dropZone">
+          <property name="text">
+           <string>📁  Click or drag &amp;&amp; drop any media file here
+Images, Audio (MP3, WAV), Video (MP4, WebM), and Documents</string>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>90</height>
+           </size>
+          </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="encDetails">
+          <layout class="QGridLayout" name="encDetailsGrid">
+           <property name="leftMargin">
+            <number>12</number>
+           </property>
+           <property name="topMargin">
+            <number>10</number>
+           </property>
+           <property name="rightMargin">
+            <number>12</number>
+           </property>
+           <property name="bottomMargin">
+            <number>10</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLabel" name="lblEncNameCap">
+             <property name="text">
+              <string>FILE NAME</string>
+             </property>
+             <property name="role" stdset="0">
+              <string>caption</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="lblEncName">
+             <property name="text">
+              <string>-</string>
+             </property>
+             <property name="role" stdset="0">
+              <string>value</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::TextSelectableByMouse</set>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="lblEncTypeCap">
+             <property name="text">
+              <string>FILE TYPE</string>
+             </property>
+             <property name="role" stdset="0">
+              <string>caption</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="lblEncType">
+             <property name="text">
+              <string>-</string>
+             </property>
+             <property name="role" stdset="0">
+              <string>value</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::TextSelectableByMouse</set>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QLabel" name="lblEncSizeCap">
+             <property name="text">
+              <string>ORIGINAL SIZE</string>
+             </property>
+             <property name="role" stdset="0">
+              <string>caption</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QLabel" name="lblEncSize">
+             <property name="text">
+              <string>-</string>
+             </property>
+             <property name="role" stdset="0">
+              <string>value</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::TextSelectableByMouse</set>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QLabel" name="lblEncB64SizeCap">
+             <property name="text">
+              <string>BASE64 SIZE</string>
+             </property>
+             <property name="role" stdset="0">
+              <string>caption</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3">
+            <widget class="QLabel" name="lblEncB64Size">
+             <property name="text">
+              <string>-</string>
+             </property>
+             <property name="role" stdset="0">
+              <string>value</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::TextSelectableByMouse</set>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QStackedWidget" name="encPreview">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>160</height>
+           </size>
+          </property>
+          <widget class="QWidget" name="encPageImage">
+           <layout class="QVBoxLayout" name="encPageImageLayout">
+            <property name="leftMargin">
+             <number>8</number>
+            </property>
+            <property name="topMargin">
+             <number>8</number>
+            </property>
+            <property name="rightMargin">
+             <number>8</number>
+            </property>
+            <property name="bottomMargin">
+             <number>8</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="encImage">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>1</width>
+                <height>1</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="encPageMedia">
+           <layout class="QVBoxLayout" name="encPageMediaLayout" stretch="1,0,0">
+            <property name="leftMargin">
+             <number>8</number>
+            </property>
+            <property name="topMargin">
+             <number>8</number>
+            </property>
+            <property name="rightMargin">
+             <number>8</number>
+            </property>
+            <property name="bottomMargin">
+             <number>8</number>
+            </property>
+            <item>
+             <widget class="QVideoWidget" name="encVideo"/>
+            </item>
+            <item>
+             <widget class="QLabel" name="encAudioLabel">
+              <property name="text">
+               <string>🎵  Audio file — press Play</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="encControls" stretch="0,1,0">
+              <item>
+               <widget class="QToolButton" name="encPlay">
+                <property name="text">
+                 <string>▶ Play</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="encSeek">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="encTime">
+                <property name="text">
+                 <string>0:00 / 0:00</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="encPageMessage">
+           <layout class="QVBoxLayout" name="encPageMessageLayout">
+            <item>
+             <widget class="QLabel" name="encMessage">
+              <property name="text">
+               <string>Media preview appears here.</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <property name="currentIndex">
+           <number>2</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="formatLayout">
+          <item>
+           <widget class="QRadioButton" name="rbFull">
+            <property name="text">
+             <string>Full Data URI</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="rbRaw">
+            <property name="text">
+             <string>Raw Base64</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="rbHtml">
+            <property name="text">
+             <string>HTML Code</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="rbCss">
+            <property name="text">
+             <string>CSS Code</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="formatSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QPlainTextEdit" name="txtOutput">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="encButtons">
+          <item>
+           <widget class="QPushButton" name="btnCopy">
+            <property name="text">
+             <string>📋 Copy to Clipboard</string>
+            </property>
+            <property name="primary" stdset="0">
+             <bool>true</bool>
+            </property>
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnSaveTxt">
+            <property name="text">
+             <string>💾 Save as TXT</string>
+            </property>
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnEncClear">
+            <property name="text">
+             <string>🔄 Clear</string>
+            </property>
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="encButtonSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabDecode">
+       <attribute name="title">
+        <string>Decode → File</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="decodeLayout" stretch="0,2,0,0,0,0,3,0">
+        <property name="spacing">
+         <number>10</number>
+        </property>
+        <property name="leftMargin">
+         <number>12</number>
+        </property>
+        <property name="topMargin">
+         <number>12</number>
+        </property>
+        <property name="rightMargin">
+         <number>12</number>
+        </property>
+        <property name="bottomMargin">
+         <number>12</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="lblDecHint">
+          <property name="text">
+           <string>Paste a full data URI (data:image/png;base64,...), raw Base64, or an HTML/CSS snippet. You can also drop a .txt file onto the window. Whitespace, URL-safe characters, and missing padding are handled.</string>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPlainTextEdit" name="txtDecInput">
+          <property name="acceptDrops">
+           <bool>false</bool>
+          </property>
+          <property name="placeholderText">
+           <string>data:audio/mpeg;base64,SUQzBAAAAAAA...  or  iVBORw0KGgoAAAANSUhEUg...</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="decOptions" stretch="0,1,0,1">
+          <item>
+           <widget class="QLabel" name="lblDecTypeCap">
+            <property name="text">
+             <string>File Type:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="cboType">
+            <item>
+             <property name="text">
+              <string>Auto-detect</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>PNG image</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>JPEG image</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>GIF image</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>WebP image</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>SVG image</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>BMP image</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>ICO icon</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>MP3 audio</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>WAV audio</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>OGG audio</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>FLAC audio</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>M4A audio</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>MP4 video</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>WebM video</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>PDF document</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>ZIP archive</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Other (binary)</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblDecNameCap">
+            <property name="text">
+             <string>File Name (no extension):</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="txtDecName">
+            <property name="text">
+             <string>decoded</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="decButtons">
+          <item>
+           <widget class="QPushButton" name="btnDecode">
+            <property name="text">
+             <string>🔓 Decode</string>
+            </property>
+            <property name="primary" stdset="0">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnPaste">
+            <property name="text">
+             <string>📋 Paste from Clipboard</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnDecClear">
+            <property name="text">
+             <string>🔄 Clear</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="decButtonSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QLabel" name="lblDecError">
+          <property name="text">
+           <string>⚠ Error</string>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="decDetails">
+          <layout class="QGridLayout" name="decDetailsGrid">
+           <property name="leftMargin">
+            <number>12</number>
+           </property>
+           <property name="topMargin">
+            <number>10</number>
+           </property>
+           <property name="rightMargin">
+            <number>12</number>
+           </property>
+           <property name="bottomMargin">
+            <number>10</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLabel" name="lblDecTypeOutCap">
+             <property name="text">
+              <string>DETECTED TYPE</string>
+             </property>
+             <property name="role" stdset="0">
+              <string>caption</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="lblDecTypeOut">
+             <property name="text">
+              <string>-</string>
+             </property>
+             <property name="role" stdset="0">
+              <string>value</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::TextSelectableByMouse</set>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="lblDecSourceOutCap">
+             <property name="text">
+              <string>TYPE SOURCE</string>
+             </property>
+             <property name="role" stdset="0">
+              <string>caption</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="lblDecSourceOut">
+             <property name="text">
+              <string>-</string>
+             </property>
+             <property name="role" stdset="0">
+              <string>value</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::TextSelectableByMouse</set>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QLabel" name="lblDecSizeOutCap">
+             <property name="text">
+              <string>DECODED SIZE</string>
+             </property>
+             <property name="role" stdset="0">
+              <string>caption</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QLabel" name="lblDecSizeOut">
+             <property name="text">
+              <string>-</string>
+             </property>
+             <property name="role" stdset="0">
+              <string>value</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::TextSelectableByMouse</set>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QLabel" name="lblDecFileOutCap">
+             <property name="text">
+              <string>OUTPUT FILE</string>
+             </property>
+             <property name="role" stdset="0">
+              <string>caption</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3">
+            <widget class="QLabel" name="lblDecFileOut">
+             <property name="text">
+              <string>-</string>
+             </property>
+             <property name="role" stdset="0">
+              <string>value</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::TextSelectableByMouse</set>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QStackedWidget" name="decPreview">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>160</height>
+           </size>
+          </property>
+          <widget class="QWidget" name="decPageImage">
+           <layout class="QVBoxLayout" name="decPageImageLayout">
+            <property name="leftMargin">
+             <number>8</number>
+            </property>
+            <property name="topMargin">
+             <number>8</number>
+            </property>
+            <property name="rightMargin">
+             <number>8</number>
+            </property>
+            <property name="bottomMargin">
+             <number>8</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="decImage">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>1</width>
+                <height>1</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="decPageMedia">
+           <layout class="QVBoxLayout" name="decPageMediaLayout" stretch="1,0,0">
+            <property name="leftMargin">
+             <number>8</number>
+            </property>
+            <property name="topMargin">
+             <number>8</number>
+            </property>
+            <property name="rightMargin">
+             <number>8</number>
+            </property>
+            <property name="bottomMargin">
+             <number>8</number>
+            </property>
+            <item>
+             <widget class="QVideoWidget" name="decVideo"/>
+            </item>
+            <item>
+             <widget class="QLabel" name="decAudioLabel">
+              <property name="text">
+               <string>🎵  Audio file — press Play</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="decControls" stretch="0,1,0">
+              <item>
+               <widget class="QToolButton" name="decPlay">
+                <property name="text">
+                 <string>▶ Play</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="decSeek">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="decTime">
+                <property name="text">
+                 <string>0:00 / 0:00</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="decPageMessage">
+           <layout class="QVBoxLayout" name="decPageMessageLayout">
+            <item>
+             <widget class="QLabel" name="decMessage">
+              <property name="text">
+               <string>Media preview appears here.</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <property name="currentIndex">
+           <number>2</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="decSaveLayout">
+          <item>
+           <widget class="QPushButton" name="btnDownload">
+            <property name="text">
+             <string>💾 Save File...</string>
+            </property>
+            <property name="primary" stdset="0">
+             <bool>true</bool>
+            </property>
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="decSaveSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QVideoWidget</class>
+   <extends>QWidget</extends>
+   <header>PyQt5.QtMultimediaWidgets</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
